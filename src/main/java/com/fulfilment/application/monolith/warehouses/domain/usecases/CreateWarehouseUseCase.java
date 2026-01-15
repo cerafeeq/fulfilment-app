@@ -16,7 +16,19 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
 
   @Override
   public void create(Warehouse warehouse) {
-    // TODO implement this method
+    if (warehouse.getLocation() == null) {
+      throw new IllegalArgumentException("Warehouse location is required");
+    }
+
+    // Validate business rules (example)
+    if (warehouse.getCapacity() != null && warehouse.getCapacity() <= 0) {
+      throw new IllegalArgumentException("Warehouse capacity must be positive");
+    }
+
+    // Set default values if needed
+    if (warehouse.isArchived()) {
+      warehouse.setArchived(false);
+    }
 
     // if all went well, create the warehouse
     warehouseStore.create(warehouse);

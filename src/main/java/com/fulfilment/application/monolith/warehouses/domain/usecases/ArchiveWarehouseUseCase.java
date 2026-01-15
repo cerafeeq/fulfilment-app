@@ -16,7 +16,8 @@ public class ArchiveWarehouseUseCase implements ArchiveWarehouseOperation {
 
   @Override
   public void archive(Warehouse warehouse) {
-    // TODO implement this method
+    // Mark warehouse as archived
+    warehouse.archived = true;
 
     warehouseStore.update(warehouse);
   }

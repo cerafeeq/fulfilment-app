@@ -8,13 +8,17 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class WarehouseRepository implements WarehouseStore, PanacheRepository<DbWarehouse> {
 
   @Override
   public List<Warehouse> getAll() {
-    return this.listAll().stream().map(DbWarehouse::toWarehouse).toList();
+    return find("archivedAt is null")  // Only return non-archived warehouses
+            .stream()
+            .map(DbWarehouse::toWarehouse)
+            .collect(Collectors.toList());
   }
 
   @Override
@@ -56,6 +60,11 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   @Override
   public Warehouse findByBusinessUnitCode(String buCode) {
     DbWarehouse dbWarehouse = find("businessUnitCode", buCode).firstResult();
+    return dbWarehouse != null ? dbWarehouse.toWarehouse() : null;
+  }
+
+  public Warehouse findActiveByBusinessUnitCode(String buCode) {
+    DbWarehouse dbWarehouse = find("businessUnitCode = ?1 and archivedAt is null", buCode).firstResult();
     return dbWarehouse != null ? dbWarehouse.toWarehouse() : null;
   }
 

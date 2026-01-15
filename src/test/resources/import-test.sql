@@ -18,4 +18,4 @@ INSERT INTO warehouse(id, businessUnitCode, location, capacity, stock, createdAt
 VALUES ('2', 'MWH.012', 'AMSTERDAM-001', 100, 50, '2024-01-01', null);
 
 INSERT INTO warehouse(id, businessUnitCode, location, capacity, stock, createdAt, archivedAt)
-VALUES ('3', 'MWH.023', 'TILBURG-001', 40, 30, '2024-01-01', '2024-06-01');
+VALUES ('3', 'MWH.023', 'TILBURG-001', 40, 30, '2024-01-01', null);

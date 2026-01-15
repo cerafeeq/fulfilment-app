@@ -62,7 +62,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
 
   @Override
   public Warehouse getAWarehouseUnitByID(String id) {
-    var warehouse = warehouseRepository.findByBusinessUnitCode(id);
+    var warehouse = warehouseRepository.findActiveByBusinessUnitCode(id);
 
     if (warehouse == null || warehouse.archivedAt != null) {
       throw new WebApplicationException(
@@ -78,16 +78,10 @@ public class WarehouseResourceImpl implements WarehousesResource {
   public void archiveAWarehouseUnitByID(String id) {
     var warehouse = warehouseRepository.findByBusinessUnitCode(id);
 
-    if (warehouse == null) {
+    if (warehouse == null || warehouse.archivedAt != null) {
       throw new WebApplicationException(
               "Warehouse with business unit code '" + id + "' not found",
               Response.Status.NOT_FOUND);
-    }
-
-    if (warehouse.archivedAt != null) {
-      throw new WebApplicationException(
-              "Warehouse with business unit code '" + id + "' is already archived",
-              Response.Status.BAD_REQUEST);
     }
 
     warehouse.archivedAt = LocalDateTime.now();
@@ -101,8 +95,9 @@ public class WarehouseResourceImpl implements WarehousesResource {
       var existingWarehouse = warehouseRepository.findByBusinessUnitCode(businessUnitCode);
 
       if (existingWarehouse == null || existingWarehouse.archivedAt != null) {
-        throw new WarehouseNotFoundException(
-                "Active warehouse with business unit code '" + businessUnitCode + "' not found");
+        throw new WebApplicationException(
+                "Active warehouse with business unit code '" + businessUnitCode + "' not found",
+                Response.Status.NOT_FOUND);  // This will return 404
       }
 
       // Validate location

@@ -16,7 +16,14 @@ public class ReplaceWarehouseUseCase implements ReplaceWarehouseOperation {
 
   @Override
   public void replace(Warehouse newWarehouse) {
-    // TODO implement this method
+    // Validate that warehouse ID is provided
+    if (newWarehouse.getId() == null) {
+      throw new IllegalArgumentException("Warehouse ID is required for replacement");
+    }
+
+    if (newWarehouse.getLocation() == null) {
+      throw new IllegalArgumentException("Warehouse location is required");
+    }
 
     warehouseStore.update(newWarehouse);
   }
