@@ -51,6 +51,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
       warehouse.capacity = data.getCapacity();
       warehouse.stock = data.getStock();
       warehouse.archived = false;
+      warehouse.archivedAt = null;
 
       warehouseRepository.create(warehouse);
 

@@ -27,7 +27,7 @@ public class CreateWarehouseUseCase implements CreateWarehouseOperation {
 
     // Set default values if needed
     if (warehouse.isArchived()) {
-      warehouse.setArchived(false);
+      warehouse.setArchivedAt(null);
     }
 
     // if all went well, create the warehouse
