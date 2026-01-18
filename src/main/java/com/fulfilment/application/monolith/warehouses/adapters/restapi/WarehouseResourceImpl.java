@@ -18,6 +18,8 @@ import java.util.List;
 
 @RequestScoped
 public class WarehouseResourceImpl implements WarehousesResource {
+  private static final String WAREHOUSE_NOT_FOUND = "Warehouse with business unit code %s not found";
+  private static final String ACTIVE_WAREHOUSE_NOT_FOUND = "Active warehouse with business unit code %s not found";
 
   @Inject private WarehouseRepository warehouseRepository;
   @Inject private WarehouseValidationService validationService;
@@ -45,7 +47,6 @@ public class WarehouseResourceImpl implements WarehousesResource {
 
       // Create warehouse entity
       var warehouse = new com.fulfilment.application.monolith.warehouses.domain.models.Warehouse();
-      //warehouse.id = UUID.randomUUID().toString();
       warehouse.businessUnitCode = data.getBusinessUnitCode();
       warehouse.location = data.getLocation();
       warehouse.capacity = data.getCapacity();
@@ -67,7 +68,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
 
     if (warehouse == null || warehouse.archivedAt != null) {
       throw new WebApplicationException(
-              "Warehouse with business unit code '" + id + "' not found",
+              String.format(WAREHOUSE_NOT_FOUND, id),
               Response.Status.NOT_FOUND);
     }
 
@@ -81,7 +82,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
 
     if (warehouse == null || warehouse.archivedAt != null) {
       throw new WebApplicationException(
-              "Warehouse with business unit code '" + id + "' not found",
+              String.format(WAREHOUSE_NOT_FOUND, id),
               Response.Status.NOT_FOUND);
     }
 
@@ -97,7 +98,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
 
       if (existingWarehouse == null || existingWarehouse.archivedAt != null) {
         throw new WebApplicationException(
-                "Active warehouse with business unit code '" + businessUnitCode + "' not found",
+                String.format(ACTIVE_WAREHOUSE_NOT_FOUND, businessUnitCode),
                 Response.Status.NOT_FOUND);  // This will return 404
       }
 

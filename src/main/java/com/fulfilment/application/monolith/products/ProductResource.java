@@ -6,6 +6,7 @@ import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -18,6 +19,10 @@ import org.jboss.logging.Logger;
 @Produces("application/json")
 @Consumes("application/json")
 public class ProductResource {
+  private static final String PRODUCT_NOT_FOUND = "Product with id of %d does not exist.";
+  private static final String INVALID_ID = "Id was invalidly set on request.";
+  private static final String PRODUCT_NOT_SET = "Product Name was not set on request.";
+  public static final int UNPROCESSABLE_ENTITY = 422;
 
   @Inject ProductRepository productRepository;
 
@@ -33,16 +38,16 @@ public class ProductResource {
   public Product getSingle(@PathParam("id") Long id) {
     Product entity = productRepository.findById(id);
     if (entity == null) {
-      throw new WebApplicationException("Product with id of " + id + " does not exist.", 404);
+      throw new WebApplicationException(String.format(PRODUCT_NOT_FOUND, id), Response.Status.NOT_FOUND);
     }
     return entity;
   }
 
   @POST
   @Transactional
-  public Response create(Product product) {
+  public Response create(@Valid Product product) {
     if (product.id != null) {
-      throw new WebApplicationException("Id was invalidly set on request.", 422);
+      throw new WebApplicationException(INVALID_ID, UNPROCESSABLE_ENTITY);
     }
 
     productRepository.persist(product);
@@ -54,13 +59,13 @@ public class ProductResource {
   @Transactional
   public Product update(@PathParam("id") Long id, Product product) {
     if (product.name == null) {
-      throw new WebApplicationException("Product Name was not set on request.", 422);
+      throw new WebApplicationException(PRODUCT_NOT_SET, UNPROCESSABLE_ENTITY);
     }
 
     Product entity = productRepository.findById(id);
 
     if (entity == null) {
-      throw new WebApplicationException("Product with id of " + id + " does not exist.", 404);
+      throw new WebApplicationException(String.format(PRODUCT_NOT_FOUND, id), Response.Status.NOT_FOUND);
     }
 
     entity.name = product.name;
@@ -79,7 +84,7 @@ public class ProductResource {
   public Response delete(@PathParam("id") Long id) {
     Product entity = productRepository.findById(id);
     if (entity == null) {
-      throw new WebApplicationException("Product with id of " + id + " does not exist.", 404);
+      throw new WebApplicationException(String.format(PRODUCT_NOT_FOUND, id), Response.Status.NOT_FOUND);
     }
     productRepository.delete(entity);
     return Response.status(204).build();

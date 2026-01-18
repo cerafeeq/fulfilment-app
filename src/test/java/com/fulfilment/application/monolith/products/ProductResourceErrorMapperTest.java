@@ -1,6 +1,5 @@
-package com.fulfilment.application.monolith.stores;
+package com.fulfilment.application.monolith.products;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.quarkus.test.junit.QuarkusTest;
@@ -11,22 +10,21 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.inject.Inject;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-public class StoreResourceErrorMapperTest {
+public class ProductResourceErrorMapperTest {
 
-    private StoreResource.ErrorMapper errorMapper;
+    private ProductResource.ErrorMapper errorMapper;
 
     @Inject
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
-        errorMapper = new StoreResource.ErrorMapper();
+        errorMapper = new ProductResource.ErrorMapper();
         try {
-            var field = StoreResource.ErrorMapper.class.getDeclaredField("objectMapper");
+            var field = ProductResource.ErrorMapper.class.getDeclaredField("objectMapper");
             field.setAccessible(true);
             field.set(errorMapper, objectMapper);
         } catch (Exception e) {
@@ -35,29 +33,9 @@ public class StoreResourceErrorMapperTest {
     }
 
     @Test
-    public void testMapWebApplicationException() throws Exception {
-        // Given
-        String errorMessage = "Store with id of 123 does not exist.";
-        WebApplicationException exception = new WebApplicationException(errorMessage, 404);
-
-        // When
-        Response response = errorMapper.toResponse(exception);
-
-        // Then
-        assertEquals(404, response.getStatus());
-
-        String jsonResponse = response.getEntity().toString();
-        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-
-        assertEquals("jakarta.ws.rs.WebApplicationException", jsonNode.get("exceptionType").asText());
-        assertEquals(404, jsonNode.get("code").asInt());
-        assertEquals(errorMessage, jsonNode.get("error").asText());
-    }
-
-    @Test
     void testToResponse_WithWebApplicationException_Returns404() {
         // Given
-        String errorMessage = "Store not found";
+        String errorMessage = "Product not found";
         WebApplicationException exception = new WebApplicationException(errorMessage, 404);
 
         // When
@@ -140,5 +118,31 @@ public class StoreResourceErrorMapperTest {
         assertEquals(RuntimeException.class.getName(), entity.get("exceptionType").asText());
         assertEquals(500, entity.get("code").asInt());
         assertNull(entity.get("error"));
+    }
+
+    @Test
+    void testToResponse_ResponseEntityIsObjectNode() {
+        // Given
+        Exception exception = new RuntimeException("Test error");
+
+        // When
+        Response response = errorMapper.toResponse(exception);
+
+        // Then
+        assertNotNull(response.getEntity());
+        assertTrue(response.getEntity() instanceof ObjectNode);
+    }
+
+    @Test
+    void testToResponse_ExceptionTypeIsCorrect() {
+        // Given
+        Exception exception = new IllegalStateException("Invalid state");
+
+        // When
+        Response response = errorMapper.toResponse(exception);
+
+        // Then
+        ObjectNode entity = (ObjectNode) response.getEntity();
+        assertEquals(IllegalStateException.class.getName(), entity.get("exceptionType").asText());
     }
 }
