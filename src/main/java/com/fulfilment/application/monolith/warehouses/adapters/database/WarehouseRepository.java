@@ -1,17 +1,20 @@
 package com.fulfilment.application.monolith.warehouses.adapters.database;
 
+import com.fulfilment.application.monolith.products.ProductResource;
 import com.fulfilment.application.monolith.warehouses.domain.models.Warehouse;
 import com.fulfilment.application.monolith.warehouses.domain.ports.WarehouseStore;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class WarehouseRepository implements WarehouseStore, PanacheRepository<DbWarehouse> {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseRepository.class);
 
   @Override
   public List<Warehouse> getAll() {
@@ -26,6 +29,7 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
   public void create(Warehouse warehouse) {
     DbWarehouse dbWarehouse = DbWarehouse.fromWarehouse(warehouse);
     this.persist(dbWarehouse);
+    LOGGER.info("Warehouse {} created successfully", warehouse);
     // Update the warehouse with the generated ID
     warehouse.id = dbWarehouse.id;
   }
@@ -46,6 +50,7 @@ public class WarehouseRepository implements WarehouseStore, PanacheRepository<Db
     dbWarehouse.archivedAt = warehouse.archivedAt;
 
     this.persist(dbWarehouse);
+    LOGGER.info("Warehouse {} updated successfully", warehouse);
   }
 
   @Override

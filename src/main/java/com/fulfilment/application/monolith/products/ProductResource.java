@@ -11,8 +11,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
-import org.jboss.logging.Logger;
 
 @Path("product")
 @ApplicationScoped
@@ -26,7 +28,7 @@ public class ProductResource {
 
   @Inject ProductRepository productRepository;
 
-  private static final Logger LOGGER = Logger.getLogger(ProductResource.class.getName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProductResource.class);
 
   @GET
   public List<Product> get() {
@@ -51,6 +53,7 @@ public class ProductResource {
     }
 
     productRepository.persist(product);
+    LOGGER.info("Product {} saved successfully", product);
     return Response.ok(product).status(201).build();
   }
 
@@ -74,6 +77,7 @@ public class ProductResource {
     entity.stock = product.stock;
 
     productRepository.persist(entity);
+    LOGGER.info("Product {} updated successfully", product);
 
     return entity;
   }
@@ -87,6 +91,7 @@ public class ProductResource {
       throw new WebApplicationException(String.format(PRODUCT_NOT_FOUND, id), Response.Status.NOT_FOUND);
     }
     productRepository.delete(entity);
+    LOGGER.info("Product with id {} deleted successfully", id);
     return Response.status(204).build();
   }
 

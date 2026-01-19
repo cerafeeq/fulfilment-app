@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.List;
 public class WarehouseResourceImpl implements WarehousesResource {
   private static final String WAREHOUSE_NOT_FOUND = "Warehouse with business unit code %s not found";
   private static final String ACTIVE_WAREHOUSE_NOT_FOUND = "Active warehouse with business unit code %s not found";
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseResourceImpl.class);
 
   @Inject private WarehouseRepository warehouseRepository;
   @Inject private WarehouseValidationService validationService;
@@ -55,6 +59,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
       warehouse.archivedAt = null;
 
       warehouseRepository.create(warehouse);
+      LOGGER.info("Warehouse {} created successfully", warehouse);
 
       return toWarehouseResponse(warehouse);
     } catch (WarehouseValidationException e) {
@@ -88,6 +93,7 @@ public class WarehouseResourceImpl implements WarehousesResource {
 
     warehouse.archivedAt = LocalDateTime.now();
     warehouseRepository.update(warehouse);
+    LOGGER.info("Warehouse {} archived successfully", warehouse);
   }
 
   @Override
@@ -132,10 +138,12 @@ public class WarehouseResourceImpl implements WarehousesResource {
       newWarehouse.archivedAt = null;
 
       warehouseRepository.save(newWarehouse);
+      LOGGER.info("Warehouse replaced from {} to {}", existingWarehouse, newWarehouse);
 
       return toWarehouseResponse(newWarehouse);
 
     } catch (WarehouseValidationException | WarehouseNotFoundException e) {
+      LOGGER.error("Failed to replace warehouse", e);
       throw new WebApplicationException(e.getMessage(), Response.Status.BAD_REQUEST);
     }
   }

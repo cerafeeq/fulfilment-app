@@ -10,7 +10,6 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class WarehouseValidationService {
-
     private static final int MAX_WAREHOUSES_PER_PRODUCT_PER_STORE = 2;
     private static final int MAX_WAREHOUSES_PER_STORE = 3;
     private static final int MAX_PRODUCTS_PER_WAREHOUSE = 5;
@@ -21,6 +20,7 @@ public class WarehouseValidationService {
 
     public void validateBusinessUnitCodeUniqueness(String businessUnitCode) {
         if (warehouseRepository.existsByBusinessUnitCode(businessUnitCode)) {
+
             throw new WarehouseValidationException(
                     "Warehouse with business unit code '" + businessUnitCode + "' already exists");
         }

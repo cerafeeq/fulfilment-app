@@ -15,11 +15,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.logging.Logger;
 import jakarta.ws.rs.core.Response;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class FulfillmentResource {
 
-    private static final Logger LOGGER = Logger.getLogger(FulfillmentResource.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(FulfillmentResource.class);
 
     @Inject
     private StoreProductWarehouseRepository fulfillmentRepository;
@@ -95,6 +96,8 @@ public class FulfillmentResource {
 
             fulfillmentRepository.persist(association);
 
+            LOGGER.info("Association {} saved successfully", association);
+
             return Response.ok(toResponse(association))
                     .status(Response.Status.CREATED)
                     .build();
@@ -121,6 +124,8 @@ public class FulfillmentResource {
         }
 
         fulfillmentRepository.deleteByStoreAndProductAndWarehouse(storeId, productId, warehouseBusinessUnitCode);
+        LOGGER.info("Deleted association with storeId {}, productId {}, warehouseBusinessUnitCode{}",
+                storeId, productId, warehouseBusinessUnitCode);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -142,7 +147,7 @@ public class FulfillmentResource {
 
         @Override
         public Response toResponse(Exception exception) {
-            LOGGER.severe("Failed to handle request: " + exception.getMessage());
+            LOGGER.error("Failed to handle request: {}", exception.getMessage());
 
             int code = 500;
             if (exception instanceof WebApplicationException) {
