@@ -1,6 +1,6 @@
-package com.fulfilment.application.monolith.warehouses.adapters.database;
+package com.fulfilment.application.monolith.fulfillment.adapters.database;
 
-import com.fulfilment.application.monolith.warehouses.domain.models.StoreProductWarehouse;
+import com.fulfilment.application.monolith.fulfillment.domain.models.StoreProductWarehouse;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 

@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.warehouses.domain.models;
+package com.fulfilment.application.monolith.fulfillment.domain.models;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity

@@ -1,7 +1,6 @@
-package com.fulfilment.application.monolith.warehouses.repositories;
+package com.fulfilment.application.monolith.fulfillment.adapters.database;
 
-import com.fulfilment.application.monolith.warehouses.adapters.database.StoreProductWarehouseRepository;
-import com.fulfilment.application.monolith.warehouses.domain.models.StoreProductWarehouse;
+import com.fulfilment.application.monolith.fulfillment.domain.models.StoreProductWarehouse;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

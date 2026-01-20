@@ -1,10 +1,10 @@
-package com.fulfilment.application.monolith.warehouses.adapters.restapi;
+package com.fulfilment.application.monolith.fulfillment.adapters.restapi;
 
-import com.fulfilment.application.monolith.warehouses.adapters.database.StoreProductWarehouseRepository;
+import com.fulfilment.application.monolith.fulfillment.adapters.database.StoreProductWarehouseRepository;
 import com.fulfilment.application.monolith.warehouses.domain.exceptions.WarehouseValidationException;
-import com.fulfilment.application.monolith.warehouses.domain.models.StoreProductWarehouse;
+import com.fulfilment.application.monolith.fulfillment.domain.models.StoreProductWarehouse;
 import com.fulfilment.application.monolith.warehouses.domain.services.WarehouseValidationService;
-import com.fulfilment.application.monolith.warehouses.dto.FulfillmentAssociationRequest;
+import com.fulfilment.application.monolith.fulfillment.adapters.restapi.dto.FulfillmentAssociationRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;

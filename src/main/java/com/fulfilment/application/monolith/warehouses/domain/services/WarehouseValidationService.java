@@ -1,6 +1,6 @@
 package com.fulfilment.application.monolith.warehouses.domain.services;
 
-import com.fulfilment.application.monolith.warehouses.adapters.database.StoreProductWarehouseRepository;
+import com.fulfilment.application.monolith.fulfillment.adapters.database.StoreProductWarehouseRepository;
 import com.fulfilment.application.monolith.warehouses.adapters.database.WarehouseRepository;
 import com.fulfilment.application.monolith.warehouses.domain.exceptions.WarehouseValidationException;
 import com.fulfilment.application.monolith.warehouses.domain.models.Location;

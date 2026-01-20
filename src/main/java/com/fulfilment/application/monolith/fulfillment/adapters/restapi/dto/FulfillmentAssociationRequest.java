@@ -1,4 +1,4 @@
-package com.fulfilment.application.monolith.warehouses.dto;
+package com.fulfilment.application.monolith.fulfillment.adapters.restapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

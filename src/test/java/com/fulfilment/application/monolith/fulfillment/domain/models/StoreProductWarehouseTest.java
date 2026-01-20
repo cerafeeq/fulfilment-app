@@ -1,6 +1,7 @@
-package com.fulfilment.application.monolith.warehouses.domain.models;
+package com.fulfilment.application.monolith.fulfillment.domain.models;
 
 import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
